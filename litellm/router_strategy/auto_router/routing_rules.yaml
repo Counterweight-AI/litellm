@@ -7,13 +7,13 @@
 # Model tiers: map each cost tier to a specific model
 tiers:
   low:
-    model: "gemini/gemini-2.5-flash-lite"
+    model: "gemini/gemini-3-flash-preview"
     max_cost_per_m_tokens: 1.0
   mid:
-    model: "gemini/gemini-3-flash-preview"
+    model: "gemini/gemini-3-pro-preview"
     max_cost_per_m_tokens: 5.0
   top:
-    model: "gemini/gemini-3-pro-preview"
+    model: "bedrock/us.anthropic.claude-opus-4-6-v1"
     max_cost_per_m_tokens: 30.0
 
 # Category -> tier routing: which tier handles each task category
