@@ -177,81 +177,22 @@ sedi "s|enabled: true|enabled: false|" "$CONFIG_FILE"
 ok "Disabled mcp_semantic_tool_filter (enable after: pip install 'litellm[semantic-router]')"
 
 # ---------- 5. API keys (.env) ----------------------------------------------
-
-# Initialize all key variables (may be populated by prompts or existing .env)
-GOOGLE_KEY="" OPENAI_KEY="" ANTHROPIC_KEY=""
+GOOGLE_KEY="${GOOGLE_API_KEY:-}"
+OPENAI_KEY="" ANTHROPIC_KEY=""
 DEEPSEEK_KEY="" MOONSHOT_KEY="" ZAI_KEY="" XAI_KEY="" MINIMAX_KEY=""
 
-if [ -f "$ENV_FILE" ]; then
-    ok ".env already exists — skipping API key prompts"
-    # Load existing keys so tier suggestions can use them
-    _getkey() { awk -F= "/^$1=/{print \$2}" "$ENV_FILE" | head -1; }
-    GOOGLE_KEY=$(_getkey GOOGLE_API_KEY)
-    OPENAI_KEY=$(_getkey OPENAI_API_KEY)
-    ANTHROPIC_KEY=$(_getkey ANTHROPIC_API_KEY)
-    DEEPSEEK_KEY=$(_getkey DEEPSEEK_API_KEY)
-    MOONSHOT_KEY=$(_getkey MOONSHOT_API_KEY)
-    ZAI_KEY=$(_getkey ZAI_API_KEY)
-    XAI_KEY=$(_getkey XAI_API_KEY)
-    MINIMAX_KEY=$(_getkey MINIMAX_API_KEY)
-else
-    echo ""
-    echo -e "${BOLD}API Key Setup${NC}"
-    echo "Enter the keys you have; press Enter to skip any you don't need."
-    echo ""
-
-    # --- Core providers (always asked) ---
-    read -rp "  Google API Key    (for Gemini — used by auto-router) : " GOOGLE_KEY
-    read -rp "  OpenAI API Key    (for GPT models)                   : " OPENAI_KEY
-    read -rp "  Anthropic API Key (for Claude via API)               : " ANTHROPIC_KEY
-
-    # --- Optional providers ---
-    echo ""
-    echo -e "${BOLD}Optional providers:${NC}"
-    echo "  1) DeepSeek"
-    echo "  2) Kimi (Moonshot)"
-    echo "  3) GLM (Zhipu/ZAI)"
-    echo "  4) Grok (xAI)"
-    echo "  5) MiniMax"
-    echo ""
-    read -rp "  Enter numbers to configure (e.g. 1 3 5), or press Enter to skip: " EXTRA_CHOICES
-
-    for choice in $EXTRA_CHOICES; do
-        case "$choice" in
-            1) read -rp "  DeepSeek API Key   : " DEEPSEEK_KEY ;;
-            2) read -rp "  Kimi API Key       : " MOONSHOT_KEY ;;
-            3) read -rp "  GLM (ZAI) API Key  : " ZAI_KEY ;;
-            4) read -rp "  Grok (xAI) API Key : " XAI_KEY ;;
-            5) read -rp "  MiniMax API Key    : " MINIMAX_KEY ;;
-            *) warn "Unknown option: $choice (skipping)" ;;
-        esac
-    done
-
-    echo ""
-
-    ALL_EMPTY=true
-    for _k in "$GOOGLE_KEY" "$OPENAI_KEY" "$ANTHROPIC_KEY" \
-              "$DEEPSEEK_KEY" "$MOONSHOT_KEY" "$ZAI_KEY" "$XAI_KEY" "$MINIMAX_KEY"; do
-        if [ -n "$_k" ]; then ALL_EMPTY=false; break; fi
-    done
-    if $ALL_EMPTY; then
-        warn "No API keys provided. The proxy will start but model calls will fail"
-        warn "until you add keys to $ENV_FILE"
-    fi
-
+if [ ! -f "$ENV_FILE" ]; then
     cat > "$ENV_FILE" <<EOF
-# LiteLLM API Keys — edit as needed
-OPENAI_API_KEY=${OPENAI_KEY:-}
-GOOGLE_API_KEY=${GOOGLE_KEY:-}
-ANTHROPIC_API_KEY=${ANTHROPIC_KEY:-}
-DEEPSEEK_API_KEY=${DEEPSEEK_KEY:-}
-MOONSHOT_API_KEY=${MOONSHOT_KEY:-}
-ZAI_API_KEY=${ZAI_KEY:-}
-XAI_API_KEY=${XAI_KEY:-}
-MINIMAX_API_KEY=${MINIMAX_KEY:-}
+# Auto-generated (headless mode)
+GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+AWS_REGION_NAME=${AWS_REGION_NAME:-}
+BEDROCK_API_KEY=${BEDROCK_API_KEY:-}
 EOF
-
-    ok "Created .env with your API keys"
+    ok "Created .env from environment variables"
+else
+    ok ".env already exists — using existing file"
 fi
 
 # ---------- 5b. Suggest auto-router tier models ------------------------------
