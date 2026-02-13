@@ -8,10 +8,12 @@ ClawRouter is a smart model routing system built on top of LiteLLM. It routes re
 
 ## Key Handover Notes
 To configure the "model-routing Proxy", note:
-- Routing config is in -> `routing_rules.yaml`
+- Routing config is in -> `./litellm/router_strategy/auto_router/routing_rules.yaml`
   - (ie, which models go to which tier)
-- Supported models -> go in `proxy_config.yaml` 
+- Supported models -> go in `./litellm/proxy/proxy_config.yaml`
   - (ie, which are supported by LiteLLM itself)
+- Another key config -> is `./proxy_server_config.yaml`
+  - (ie, consider alongside the routing rules and configured models)
 
 ### Quick Start
 ```bash
