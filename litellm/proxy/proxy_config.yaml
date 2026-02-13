@@ -34,7 +34,7 @@ model_list:
   - model_name: auto
     litellm_params:
       model: "auto_router/auto_router_1"
-      auto_router_config_path: "/home/zazer/persistz/cw/clawrouter/litellm/router_strategy/auto_router/routing_rules.yaml"
+      auto_router_config_path: "/home/ubuntu/clawdrouter/litellm/router_strategy/auto_router/routing_rules.yaml"
       auto_router_default_model: "gemini/gemini-3-flash-preview"
 
 # General Settings
