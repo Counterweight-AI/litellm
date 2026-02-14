@@ -21,11 +21,11 @@ tiers:
 #             summarization, coding, creative, reasoning, analysis
 routing:
   heartbeat: low
-  simple-chat: low
+  simple-chat: top
   lookup: low
   translation: mid
   summarization: mid
-  coding: mid
+  coding: top
   creative: mid
   reasoning: top
   analysis: top
