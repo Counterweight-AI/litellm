@@ -435,6 +435,8 @@ class ProxyBaseLLMRequestProcessing:
                 else None
             ),
             "x-litellm-timeout": str(timeout) if timeout is not None else None,
+            "X-Accel-Buffering": "no",
+            "Cache-Control": "no-cache, no-transform",
             **{k: str(v) for k, v in kwargs.items()},
         }
         if request_data:
